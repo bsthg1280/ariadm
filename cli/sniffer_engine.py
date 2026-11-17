@@ -44,6 +44,28 @@ class VideoSniffer:
         page_url = page_url.strip()
         u_lower = page_url.lower()
 
+        # 0. Hỗ trợ BitTorrent & Magnet Link (Aria2 Native)
+        if u_lower.startswith("magnet:?") or u_lower.endswith(".torrent"):
+            dn_match = re.search(r'[?&]dn=([^&]+)', page_url)
+            torrent_name = urllib.parse.unquote(dn_match.group(1)).replace("+", " ") if dn_match else "BitTorrent Download"
+            return {
+                "url": page_url,
+                "title": torrent_name,
+                "engine": "torrent",
+                "referer": "",
+                "formats": [
+                    {
+                        "id": "1",
+                        "resolution": "P2P Swarm",
+                        "height": 9999,
+                        "size": "Tự động phân bổ",
+                        "ext": "torrent",
+                        "stream_url": page_url,
+                        "type": "BitTorrent"
+                    }
+                ]
+            }
+
         # 1. YouTube & các nền tảng lớn được hỗ trợ chính quy
         if any(d in u_lower for d in ("youtube.com", "youtu.be", "tiktok.com", "facebook.com", "fb.watch", "twitter.com", "x.com", "bilibili.com", "missav.ws")):
             info = self._analyze_via_ytdlp(page_url)

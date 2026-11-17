@@ -1,8 +1,8 @@
-# 🚀 AriaDM — Multi-threaded Video Downloader & Sniffer for Linux
+# 🚀 AriaDM — Multi-threaded Video & Media Downloader
 
 <p align="center">
-  <b>Bộ công cụ bóc tách luồng & tăng tốc tải video đa luồng mã nguồn mở, tối ưu cho Linux Desktop.</b><br>
-  <i>Hội tụ sức mạnh từ <code>aria2c</code> (16–32 luồng song song) + <code>yt-dlp</code> + <code>ffmpeg</code>.</i>
+  <b>Bộ công cụ bóc tách luồng & tăng tốc tải video đa luồng mã nguồn mở, tối ưu cho Linux Desktop (và đa nền tảng).</b><br>
+  <i>Hội tụ sức mạnh từ <code>aria2c</code> (16–32 luồng song song + BitTorrent) + <code>yt-dlp</code> + <code>ffmpeg</code>.</i>
 </p>
 
 ---
@@ -11,16 +11,15 @@
 
 **AriaDM** hiện tại là một dự án **chuyên biệt về tải video (Video Downloader & Stream Sniffer)** mã nguồn mở, được xây dựng nhằm mang lại trải nghiệm tải video mượt mà, tốc độ cao trên Linux mà không cần phải chạy IDM Windows qua Wine/Proton.
 
-Hệ thống tự động giải quyết các vấn đề thường gặp trên Linux:
-- **Tải đa luồng kịch trần băng thông:** Tận dụng `aria2c` chia nhỏ file thành 16 kết nối song song.
-- **Tự động bóc tách luồng HLS/DASH phức tạp:** Bắt và ghép các playlist `.m3u8`, `.vl`, `.mpd`, trích xuất video Full HD/4K từ YouTube, TikTok, Facebook và các trang web phim.
+Hệ thống tự động giải quyết các bài toán tải media phức tạp:
+- **Tải đa luồng kịch trần băng thông:** Tận dụng `aria2c` chia nhỏ file thành 16–32 kết nối song song.
+- **Tự động bóc tách luồng HLS/DASH ngầm:** Bắt và ghép các playlist `.m3u8`, `.vl`, `.mpd`, trích xuất video Full HD/4K từ YouTube, TikTok, Facebook và các trang web phim.
 - **Tính toán trước Độ phân giải & Dung lượng:** Hiển thị rõ ràng độ phân giải (1080p, 720p, 480p...) và dung lượng dự kiến (MB/GB) trước khi bấm tải.
+- **🧲 Hỗ trợ BitTorrent & Magnet Link:** Tích hợp engine P2P có sẵn của `aria2c`, hỗ trợ tải file `.torrent` và link `magnet:` siêu nhẹ.
 
 ---
 
 ## 🧩 Các thành phần cốt lõi
-
-Dự án gồm 2 công cụ chính hoạt động độc lập hoặc phối hợp với nhau:
 
 ### 1. AriaDM CLI (`ariadm`)
 Công cụ dòng lệnh thông minh. Bạn chỉ cần paste link trang web, `ariadm` sẽ tự động phân tích cấu trúc trang, tìm ra luồng video ngầm và tải về:
@@ -37,6 +36,9 @@ ariadm "https://vlxx.net/..." -q 1080p
 
 # Tăng lên 32 luồng song song và lưu vào thư mục khác:
 ariadm "https://..." -c 32 -d ~/Videos -o "Phim.mp4"
+
+# Tải link Magnet / BitTorrent:
+ariadm "magnet:?xt=urn:btih:..."
 ```
 
 ### 2. AriaDM WebExtension (Manifest V3)
@@ -44,6 +46,22 @@ Tiện ích mở rộng độc lập cho trình duyệt (Brave, Chrome, Edge, C�
 - Tự động bắt mọi luồng media khi bạn xem phim hoặc xem video.
 - Popup hiện đại phong cách Cốc Cốc hiển thị: **Độ phân giải**, **Dung lượng dự kiến**, **Định dạng**.
 - Nút bấm `[ ⚡ Tải Aria2c (16 luồng) ]` và nút `[ 💻 Copy CLI ]` để chuyển sang terminal.
+
+---
+
+## 🗺️ Lộ trình Phát triển & Định hướng Đa Nền Tảng (Roadmap)
+
+Dự án được định hướng phát triển thành công cụ quản lý tải xuống toàn diện (All-in-One Download Manager) trên cả 3 nền tảng:
+
+```
+┌─────────────────────────────────┐     ┌─────────────────────────────────┐     ┌─────────────────────────────────┐
+│     Giai đoạn 1 (Hiện tại)      │ ──> │      Giai đoạn 2 (Sắp tới)      │ ──> │      Giai đoạn 3 (Tương lai)    │
+├─────────────────────────────────┤     ├─────────────────────────────────┤     ├─────────────────────────────────┤
+│ • Video Sniffer & Downloader    │     │ • Hỗ trợ hoàn chỉnh Torrent/P2P │     │ • Bản cài đặt macOS (.dmg)      │
+│ • HLS, DASH, YouTube, Web Phim  │     │ • Bản Portable Windows (.exe)   │     │ • Auto-updater & Cloud Sync     │
+│ • Linux CLI & WebExtension MV3  │     │ • Desktop GUI Native (Qt6/Rust) │     │ • Phân loại danh mục tự động    │
+└─────────────────────────────────┘     └─────────────────────────────────┘     └─────────────────────────────────┘
+```
 
 ---
 
@@ -74,13 +92,14 @@ chmod +x install.sh
 ## 🤝 Lời ngỏ & Kêu gọi đóng góp từ Cộng đồng (Call for Contributions)
 
 > [!IMPORTANT]
-> **AriaDM hiện tại đang ở giai đoạn đầu tập trung hoàn thiện cho tác vụ VIDEO.**
+> **AriaDM hiện tại đang ở giai đoạn đầu tập trung hoàn thiện cho tác vụ VIDEO & STREAMING.**
 > 
-> Chúng tôi rất hoan nghênh và mong muốn nhận được sự chung tay đóng góp từ cộng đồng mã nguồn mở để phát triển AriaDM ngày một mạnh mẽ hơn:
-> - **Viết thêm Custom Extractors:** Bổ sung bộ bóc tách cho các trang web phim, anime, bài giảng, khoá học, dịch vụ livestream đặc thù trong file `cli/sniffer_engine.py`.
-> - **Phát triển Desktop GUI Native:** Đóng góp giao diện người dùng bằng **Qt6 (PySide6 / C++)** hoặc **Rust (Slint / Tauri)**.
-> - **Tối ưu hóa Engine Tải:** Viết daemon lõi bằng Rust (Tokio) để tối ưu hóa tài nguyên RAM/CPU.
-> - **Đóng gói Linux:** Hỗ trợ tạo PKGBUILD (Arch User Repository - AUR), Flatpak, AppImage và DEB/RPM.
+> Chúng tôi rất hoan nghênh và mong muốn nhận được sự chung tay đóng góp từ cộng đồng mã nguồn mở:
+> - 🧩 **Viết thêm Custom Extractors:** Bổ sung bộ bóc tách cho các trang web phim, anime, bài giảng, khoá học, dịch vụ livestream đặc thù trong file `cli/sniffer_engine.py`.
+> - 🪟 **Hỗ trợ Windows & macOS (Cross-platform):** Đóng gói bộ bundle standalone cho Windows (`aria2c.exe` + `yt-dlp.exe` + `ffmpeg.exe` + script launcher) và Homebrew Formula cho macOS.
+> - 🧲 **Hoàn thiện module BitTorrent:** Mở rộng giao diện quản lý peer, tracker, tốc độ upload/download cho torrent.
+> - 🖥️ **Phát triển Desktop GUI Native:** Đóng góp giao diện người dùng native bằng **Qt6 (PySide6 / C++)** hoặc **Rust (Slint / Tauri)**.
+> - 📦 **Đóng gói Linux:** Hỗ trợ tạo PKGBUILD (Arch User Repository - AUR), Flatpak, AppImage và DEB/RPM.
 
 Mọi ý tưởng, đóng góp (Pull Request, Issue báo lỗi, gợi ý trang web cần hỗ trợ) đều vô cùng quý giá!
 

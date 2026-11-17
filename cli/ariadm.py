@@ -60,6 +60,32 @@ def download_stream(target, dest_dir, connections=16, custom_name=None):
     title = target.get("title", "Video")
     format_arg = target.get("format_arg")
 
+    # Xử lý BitTorrent & Magnet Link bằng aria2c trực tiếp
+    if stream_url.startswith("magnet:") or stream_url.endswith(".torrent"):
+        if not aria2_bin:
+            print(f"{RED}❌ Tải Torrent yêu cầu phải có `aria2c`! Cài đặt bằng: sudo pacman -S aria2{RESET}")
+            return False
+        cmd = [
+            aria2_bin,
+            "--seed-time=0",
+            "--enable-dht=true",
+            "--bt-enable-lpd=true",
+            "--bt-max-peers=60",
+            "-d", dest_dir,
+            stream_url
+        ]
+        print(f"\n{GREEN}{BOLD}🧲 Bắt đầu tải BitTorrent qua aria2c...{RESET}")
+        print(f"📁 Thư mục lưu: {CYAN}{dest_dir}{RESET}\n")
+        try:
+            proc = subprocess.run(cmd)
+            if proc.returncode == 0:
+                print(f"\n{GREEN}{BOLD}✅ TẢI TORRENT HOÀN TẤT!{RESET}")
+                return True
+            return False
+        except KeyboardInterrupt:
+            print(f"\n{YELLOW}⚠️ Đã dừng tải torrent.{RESET}")
+            return False
+
     out_tmpl = f"{sanitize_filename(custom_name or title)}.%(ext)s"
 
     cmd = [
