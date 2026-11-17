@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+env/
+venv/
+*.part*
+*.ytdl
+*.mp4
+*.mkv
+*.webm
+.DS_Store
+.idea/
+.vscode/
