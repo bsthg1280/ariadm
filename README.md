@@ -47,6 +47,14 @@ Tiện ích mở rộng độc lập cho trình duyệt (Brave, Chrome, Edge, C�
 - Popup hiện đại phong cách Cốc Cốc hiển thị: **Độ phân giải**, **Dung lượng dự kiến**, **Định dạng**.
 - Nút bấm `[ ⚡ Tải Aria2c (16 luồng) ]` và nút `[ 💻 Copy CLI ]` để chuyển sang terminal.
 
+### 3. AriaDM Desktop GUI (`ariadm-gui`)
+Giao diện đồ hoạ PySide6 hiện đại kết hợp tinh hoa giữa **IDM cổ điển** và **AriaNg**, tối ưu đồng bộ với theme **macOS Dark (MacTahoe / WhiteSur)**:
+- **Thanh công cụ Toolbar phong cách IDM**: ➕ Thêm URL, ▶ Tiếp tục, ⏸ Tạm dừng, ⏹ Dừng tất cả, 🗑 Xoá bài, và **🧹 Xoá lịch sử tải** tiện lợi.
+- **Sidebar phân loại danh mục (Categories)**: Tất cả bài tải, Đang tải, Tạm dừng, Hoàn thành, Lỗi/Huỷ, BitTorrent/Magnet và **Video Grabber**.
+- **Tab Video Grabber tích hợp**: Gom toàn bộ luồng video bắt được từ trình duyệt web với độ phân giải và dung lượng ước tính.
+- **Menu chuột phải phong phú**: Mở file, Mở thư mục chứa, Tải lại, Xoá khỏi danh sách, Xoá cả file trên đĩa.
+- **Khởi chạy cực nhanh**: Gõ `ariadm-gui` trên terminal hoặc mở biểu tượng **AriaDM** từ Menu ứng dụng desktop.
+
 ---
 
 ## 🗺️ Lộ trình Phát triển & Định hướng Đa Nền Tảng (Roadmap)

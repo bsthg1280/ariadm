@@ -226,6 +226,84 @@ class AriaDMHandler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
             return
 
+        if self.path == "/api/cancel_task":
+            try:
+                data = json.loads(body)
+                task_id = data.get("task_id", "")
+                with _lock:
+                    task = TASKS.get(task_id)
+                    if task and "proc" in task and task["proc"].poll() is None:
+                        task["proc"].terminate()
+                        task["status"] = "cancelled"
+                        task["speed"] = "Đã huỷ"
+                self._send_cors(200)
+                self.wfile.write(json.dumps({"status": "ok"}).encode("utf-8"))
+            except Exception as e:
+                self._send_cors(500)
+                self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+            return
+
+        if self.path == "/api/clear_streams":
+            try:
+                with _lock:
+                    STREAMS.clear()
+                self._send_cors(200)
+                self.wfile.write(json.dumps({"status": "ok"}).encode("utf-8"))
+            except Exception as e:
+                self._send_cors(500)
+                self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+            return
+
+        if self.path == "/api/clear_tasks":
+            try:
+                data = json.loads(body) if body else {}
+                all_clear = data.get("all", False)
+                with _lock:
+                    if all_clear:
+                        for t in TASKS.values():
+                            if "proc" in t and t["proc"].poll() is None:
+                                try:
+                                    t["proc"].terminate()
+                                except:
+                                    pass
+                        TASKS.clear()
+                    else:
+                        for tid in list(TASKS.keys()):
+                            if TASKS[tid].get("status") in ("completed", "cancelled", "error"):
+                                del TASKS[tid]
+                self._send_cors(200)
+                self.wfile.write(json.dumps({"status": "ok"}).encode("utf-8"))
+            except Exception as e:
+                self._send_cors(500)
+                self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+            return
+
+        if self.path == "/api/delete_task":
+            try:
+                data = json.loads(body)
+                task_id = data.get("task_id", "")
+                delete_file = data.get("delete_file", False)
+                with _lock:
+                    task = TASKS.get(task_id)
+                    if task:
+                        if "proc" in task and task["proc"].poll() is None:
+                            try:
+                                task["proc"].terminate()
+                            except:
+                                pass
+                        if delete_file and task.get("file_path") and os.path.exists(task["file_path"]):
+                            try:
+                                os.remove(task["file_path"])
+                            except:
+                                pass
+                        del TASKS[task_id]
+                self._send_cors(200)
+                self.wfile.write(json.dumps({"status": "ok"}).encode("utf-8"))
+            except Exception as e:
+                self._send_cors(500)
+                self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+            return
+
         self._send_cors(404)
 
 
